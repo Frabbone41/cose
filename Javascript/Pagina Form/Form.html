@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Area Riservata</title>
+  <!-- Link al CSS -->
+  <link rel="stylesheet" href="Form.css">
+  <!-- Libreria per MD5 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+
+  <div class="login-box" id="loginBox">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Nome utente" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button onclick="login()">Accedi</button>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <div class="welcome" id="welcomeMsg" style="display:none;"></div>
+
+  <!-- Collegamento al file JavaScript -->
+  <script src="Form.js"></script>
+</body>
+</html>
