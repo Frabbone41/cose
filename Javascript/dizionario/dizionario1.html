@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dizionario Italiano-Inglese</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light p-4">
+
+  <div class="container">
+    <h1 class="text-center text-primary mb-4">Dizionario Italiano ↔ Inglese</h1>
+
+    <div class="card shadow p-4">
+      <div class="input-group mb-3">
+        <input type="text" id="parolaInput" class="form-control" placeholder="Inserisci una parola...">
+        <button id="btnTraduci" class="btn btn-success">Traduci</button>
+      </div>
+
+      <div id="traduzione" class="alert alert-info d-none"></div>
+      <div id="errore" class="alert alert-danger d-none"></div>
+
+      <div class="text-center mt-3">
+        <button id="btnAggiungi" class="btn btn-primary">Aggiungi parola</button>
+      </div>
+    </div>
+
+    <h3 class="mt-5 mb-3 text-center">Dizionario completo</h3>
+    <table id="tabella" class="table table-striped table-bordered text-center shadow-sm">
+      <thead class="table-primary">
+        <tr>
+          <th>Italiano</th>
+          <th>Inglese</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Il tuo JavaScript -->
+  <script>
+    // Dizionario con più traduzioni (array)
+    const dizionario = {
+      "ciao": ["hello", "hi"],
+      "cane": ["dog"],
+      "gatto": ["cat"],
+      "sole": ["sun"],
+      "luna": ["moon"],
+      "casa": ["house", "home"],
+      "scuola": ["school"],
+      "libro": ["book", "volume"],
+      "mela": ["apple"],
+      "computer": ["computer", "pc"]
+    };
+
+    // Elementi del DOM
+    const input = document.getElementById("parolaInput");
+    const traduzioneDiv = document.getElementById("traduzione");
+    const erroreDiv = document.getElementById("errore");
+    const tabellaBody = document.querySelector("#tabella tbody");
+    const btnTraduci = document.getElementById("btnTraduci");
+    const btnAggiungi = document.getElementById("btnAggiungi");
+
+    // Aggiorna la tabella
+    function aggiornaTabella() {
+      tabellaBody.innerHTML = "";
+      for (const [ita, engArray] of Object.entries(dizionario)) {
+        const riga = document.createElement("tr");
+        riga.innerHTML = `<td>${ita}</td><td>${engArray.join(", ")}</td>`;
+        tabellaBody.appendChild(riga);
+      }
+    }
+
+    // Traduzione bidirezionale
+   function traduci() {
+  const parola = input.value.trim().toLowerCase();
+  traduzioneDiv.textContent = "";
+  erroreDiv.textContent = "";
+
+  traduzioneDiv.classList.add("d-none");
+  erroreDiv.classList.add("d-none");
+
+  if (!parola) {
+    erroreDiv.textContent = "Inserisci una parola!";
+    erroreDiv.classList.remove("d-none");
+    return;
+  }
+
+  let risultati = [];
+
+  // Italiano → Inglese
+  if (dizionario[parola]) {
+    risultati = dizionario[parola];
+  } else {
+    // Inglese → Italiano (ricerca di *tutti* i match)
+    for (const [ita, engArray] of Object.entries(dizionario)) {
+      if (engArray.includes(parola)) {
+        risultati.push(ita);
+      }
+    }
+  }
+
+  if (risultati.length > 0) {
+    traduzioneDiv.textContent = `Traduzione: ${risultati.join(", ")}`;
+    traduzioneDiv.classList.remove("d-none");
+  } else {
+    erroreDiv.textContent = "Parola non trovata nel dizionario.";
+    erroreDiv.classList.remove("d-none");
+  }
+}
+
+
+    // Aggiungi parola
+    function aggiungiParola() {
+  const ita = prompt("Inserisci la parola in ITALIANO:")?.trim().toLowerCase();
+  const engInput = prompt("Inserisci UNA O PIÙ traduzioni in INGLESE (separate da virgola):")?.trim().toLowerCase();
+  erroreDiv.classList.add("d-none");
+
+  if (!ita || !engInput) {
+    erroreDiv.textContent = "Devi inserire entrambe le parole!";
+    erroreDiv.classList.remove("d-none");
+    return;
+  }
+
+  // Divide le traduzioni inglesi per virgola e toglie spazi extra
+  const nuoveTraduzioni = engInput.split(",").map(t => t.trim()).filter(t => t);
+
+  if (nuoveTraduzioni.length === 0) {
+    erroreDiv.textContent = "Devi inserire almeno una traduzione valida!";
+    erroreDiv.classList.remove("d-none");
+    return;
+  }
+
+  // Se la parola esiste già → aggiungiamo solo quelle nuove
+  if (dizionario[ita]) {
+    let aggiunte = [];
+    for (const eng of nuoveTraduzioni) {
+      if (!dizionario[ita].includes(eng)) {
+        dizionario[ita].push(eng);
+        aggiunte.push(eng);
+      }
+    }
+
+    if (aggiunte.length > 0) {
+      alert(`Aggiunte nuove traduzioni per "${ita}": ${aggiunte.join(", ")}`);
+    } else {
+      erroreDiv.textContent = "Tutte queste traduzioni esistono già per questa parola!";
+      erroreDiv.classList.remove("d-none");
+      return;
+    }
+  } else {
+    dizionario[ita] = nuoveTraduzioni;
+    alert(`Parola aggiunta: ${ita} → ${nuoveTraduzioni.join(", ")}`);
+  }
+
+  aggiornaTabella();
+}
+
+
+    // Event listeners
+    btnTraduci.addEventListener("click", traduci);
+    btnAggiungi.addEventListener("click", aggiungiParola);
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") traduci();
+    });
+
+    aggiornaTabella();
+  </script>
+</body>
+</html>

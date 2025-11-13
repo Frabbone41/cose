@@ -2,9 +2,9 @@ public class CD {
     private String autore;
     private String titolo;
     private int n_brani;
-    private int durata; // in minuti
+    private double durata; // in minuti
 
-    public CD(String autore, String titolo, int n_brani, int durata) {
+    public CD(String autore, String titolo, int n_brani, double durata) {
         this.autore = autore;
         this.titolo = titolo;
         this.n_brani = n_brani;
@@ -15,7 +15,7 @@ public class CD {
         return autore;
     }
 
-    public int getDurata() {
+    public double getDurata() {
         return durata;
     }
 
@@ -41,6 +41,21 @@ public class CD {
 
     public void setTitolo(String titolo) {
         this.titolo = titolo;
+    }
+
+    public String toString() {
+        return "Titolo: " + titolo + ", Autore: " + autore + ", Numero Brani: " + n_brani + ", Durata: " + durata
+                + " minuti";
+    }
+
+    public int compareDurata(double durata, double durata2) {
+        if (this.durata < durata && this.durata < durata2) {
+            return -1; // meno di entrambi
+        } else if (this.durata > durata && this.durata > durata2) {
+            return 1; // più di entrambi
+        } else {
+            return 0; // tra i due o uguale a uno dei due
+        }
     }
 
 }

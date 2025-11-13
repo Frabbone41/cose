@@ -1,4 +1,4 @@
-public class cicli {
+/*public class cicli {
     public static void main(String[] args) {
         // Ciclo for
         System.out.println("Soluzioni");
@@ -21,5 +21,5 @@ public class cicli {
             System.out.println(i + ") SOL:");
             i++;
         } while (i <= 5);
-    }
-}
+    */
+
